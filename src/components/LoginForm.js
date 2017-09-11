@@ -1,16 +1,23 @@
 import React, { Component } from 'react';
+import { Text } from 'react-native';
 import { connect } from 'react-redux';
-import { emailChanged, passwordChanged } from './../actions';
+import { emailChanged, passwordChanged, loginUser } from './../actions';
 import { Card, CardSection, Input, Button } from './common';
 
 
 class LoginForm extends Component {
     onEmailChange(text) {
         this.props.emailChanged(text);
-    };
-    onPasswordChange(text){
+    }
+    onPasswordChange(text) {
         this.props.passwordChanged(text);
-    };
+    }
+
+    onButtonPress() {
+        const { email, password } = this.props;
+        this.props.loginUser({ email, password });
+    }
+
     render() {
         return (
             <Card>
@@ -20,7 +27,7 @@ class LoginForm extends Component {
                         placeholder="email@gmail.com"
                         onChangeText={this.onEmailChange.bind(this)}
                         value={this.props.email}
-                     />
+                    />
                 </CardSection>
                 <CardSection>
                     <Input
@@ -29,23 +36,26 @@ class LoginForm extends Component {
                         placeholder="password"
                         onChangeText={this.onPasswordChange.bind(this)}
                         value={this.props.password}
-                     />
+                    />
                 </CardSection>
                 <CardSection>
-                    <Button>
+                    <Button title="Login" onPress={this.onButtonPress.bind(this)}>
                         Login
                     </Button>
-                </CardSection>
+                </CardSection>               
             </Card>
         );
     }
  }
 
  const mapStateToProps = state => {
-     return{
+     return {
          email: state.auth.email,
-         password: state.auth.password
+         password: state.auth.password,
+         error: state.auth.error
      };
  };
 
- export default connect(mapStateToProps, { emailChanged, passwordChanged })(LoginForm);
+ export default connect(mapStateToProps, { 
+     emailChanged, passwordChanged, loginUser 
+    })(LoginForm);
